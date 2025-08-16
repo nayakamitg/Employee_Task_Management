@@ -1,0 +1,299 @@
+.employee-list {
+  padding: 2rem;
+  width: 100vw;
+  margin-top: 80px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.task-listdetailsPopup {
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+
+.list-header h1 {
+  color: #fff;
+}
+
+.add-employee-btn {
+  background: #64ffda;
+  color: #1a1a1a;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.add-employee-btn:hover {
+  background: #45e6c3;
+  transform: translateY(-2px);
+}
+
+.search-filter {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-input,
+.search-input1,
+.filter-select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  color: #fff;
+  width: 500px;
+}
+
+.search-input1 {
+  width: 170px;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.employee-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.employee-card:hover {
+  transform: translateY(-5px);
+}
+
+.employee-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.employee-avatar {
+  width: 60px;
+  height: 60px;
+  background: rgba(100, 255, 218, 0.2);
+  border-radius: 50%;
+}
+
+.employee-avatar img {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+
+.employee-info h3 {
+  color: #fff;
+  margin: 0;
+}
+
+.employee-info p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0.5rem 0 0;
+}
+
+.employee-details {
+  margin-bottom: 1.5rem;
+}
+
+.employee-details p {
+  color: #fff;
+  margin: 0.5rem 0;
+}
+
+.employee-details span {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.card-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.edit-btn,
+.view-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background: rgba(100, 255, 218, 0.2);
+  color: #64ffda;
+}
+
+.view-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.edit-btn:hover,
+.view-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Modal Styles */
+:root {
+  --modal-bg: #1F1F1F;
+  --modal-content-bg: #383838;
+  --modal-item-bg: #383838;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Override CoreUI Modal styles for dark theme */
+.modal-content {
+  background-color: var(--modal-bg) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.modal-header {
+  background-color: var(--modal-bg) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.modal-footer {
+  background-color: var(--modal-bg) !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.modal-title {
+  color: #fff !important;
+}
+
+.employee-modal-content {
+  color: #fff;
+  padding: 1rem;
+  background: var(--modal-bg);
+}
+
+.employee-modal-content h4 {
+  color: #fff;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.employee-modal-content h5 {
+  color: #fff;
+  margin: 1.5rem 0 1rem;
+}
+
+.employee-personal-info,
+.department-info,
+.tasks-info {
+  margin-bottom: 2rem;
+  background: var(--modal-content-bg);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.employee-modal-content p {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.employee-modal-content strong {
+  color: rgba(255, 255, 255, 0.9);
+  margin-right: 0.5rem;
+}
+
+.task-summary {
+  background: var(--modal-content-bg);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-list {
+  display: grid;
+  gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  width: 100% !important;
+}
+
+.task-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-list::-webkit-scrollbar-track {
+  background: var(--modal-bg);
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background: var(--modal-content-bg);
+  border-radius: 3px;
+}
+
+.task-item {
+  background: var(--modal-content-bg);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-item p {
+  margin: 0.25rem 0;
+}
+
+/* Make modal scrollable if content is too long */
+.modal-dialog {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 722px) {
+  .employee-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-filter {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .search-input,
+  .filter-select {
+    width: 100%;
+  }
+
+  .task-summary {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

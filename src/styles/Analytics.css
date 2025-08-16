@@ -1,0 +1,84 @@
+.analytics {
+  padding: 2rem;
+  width: 100vw;
+  margin-top: 80px;
+}
+
+.analytics-title {
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+  flex: 300px 1;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+}
+
+.metric-card h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.metric-value {
+  color: #64ffda;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.metric-chart {
+  height: 100px;
+  background: rgba(100, 255, 218, 0.1);
+  border-radius: 8px;
+}
+
+.analytics-details {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.performance-trends,
+.department-stats {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.performance-trends h2,
+.department-stats h2 {
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.trend-chart {
+  height: 300px;
+  background: rgba(100, 255, 218, 0.1);
+  border-radius: 8px;
+}
+
+.stats-table {
+  color: #fff;
+}
