@@ -458,7 +458,7 @@ const EmployeeCard = ({ employee }) => {
           </p>
         </div>
         <div className="card-actions">
-          <button className="edit-btn">Edit</button>
+          <button onClick={()=>handleEdit} className="edit-btn">Edit</button>
           <button className="view-btn" onClick={() => setVisible(true)}>
             View Details
           </button>

@@ -53,20 +53,19 @@ export const updateTask = createAsyncThunk(
 
 
 
-// export const addComment = createAsyncThunk(
-//   "updatetask",
-//   async ({ id, data }, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.put(
-//         "http://localhost:5231/api/TaskComment",
-//         data
-//       );
-//       return response.data;
-//     } catch (error) {
-//       return rejectWithValue(error?.response?.data || "Failed to update task");
-//     }
-//   }
-// );
+export const addComment = createAsyncThunk(
+  "addcommenttask",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("http://localhost:5231/api/TaskComment",
+        data
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || "Failed to update task");
+    }
+  }
+);
 
 
 
@@ -82,6 +81,8 @@ const taskSlice = createSlice({
     successAdded:false,
     updatetaskloading: false,
     updatetaskerror: null,
+    addcommentloading:false,
+    addcommenterror:null
   },
   reducers: {
     setsuccessTask: (state, action) => {
@@ -153,6 +154,26 @@ const taskSlice = createSlice({
       .addCase(updateTask.rejected, (state, action) => {
         state.updatetaskloading = false;
         state.updatetaskerror = action.payload;
+      });
+      builder
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.addcommentloading = false;
+        state.tasks.map((task)=>{
+          if(task.task.TaskID==action.payload.taskId){
+            task.comments.push(action.payload)
+          }
+        })
+
+      
+        state.addcommenterror = null;
+      })
+      .addCase(addComment.pending, (state) => {
+        state.addcommentloading = true;
+        state.addcommenterror = null;
+      })
+      .addCase(addComment.rejected, (state, action) => {
+        state.addcommentloading = false;
+        state.addcommenterror = action.payload;
       });
   },
 });

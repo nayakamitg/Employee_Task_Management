@@ -38,11 +38,25 @@
 .detail-row {
   margin-bottom: 1.2rem;
   padding-bottom: 0.5rem;
+  border-radius: 10px;
 }
 
 .detail-row:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
+}
+.detail-row-comment{
+  border: 1px solid rgba(245, 222, 179, 0.566);
+  border-radius: 10px;
+  padding:5px 10px;
+  margin: 3px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+.detail-row-comment p{
+  margin-bottom: 0;
 }
 
 .detail-grid {
@@ -388,21 +402,34 @@ option{
 
 .commentSection{
   height: 50px;
-  min-width: 400px;
+  min-width: 300px;
+  flex:1;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-top: 15px;
 }
 .commentSection>input{
-  width: 300px;
   height: 100%;
   border-radius: 10px;
   padding: 0.8rem 1rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  flex: 6;
+  
 }
 .commentSection button{
-  margin-left: 10px;
+  margin-left: 0.3em;
 }
 
 .emp-task-actions1{
   justify-content: space-between;
   flex-wrap: wrap;
+  align-items: center;
+    
+}
+
+.detail-section-comment{
+  max-height: 400px;
+  overflow-x: auto;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../styles/TaskList.css";
 import { useSelector, useDispatch } from "react-redux";
 import { getEmployee } from "../../services/ReduxController/employeeSlice";
@@ -19,7 +19,7 @@ import {
   CModalBody,
   CModalFooter,
 } from "@coreui/react";
-import { addTask, getAllTask, updateTask,setsuccessTask } from "../../services/ReduxController/taskSlice";
+import { addTask, getAllTask, updateTask,setsuccessTask, addComment } from "../../services/ReduxController/taskSlice";
 import { InfinitySpin } from "react-loader-spinner";
 
 const TaskList = () => {
@@ -473,8 +473,11 @@ console.log(formData)
 export default TaskList;
 
 const TaskCard = ({ task }) => {
+  const comment=useRef("");
+  const {addcommentloading,addcommenterror}=useSelector((state)=>state.task)
   const [showDetails, setShowDetails] = useState(false);
 const updatetaskdispatch=useDispatch();
+const addcommentdispatch=useDispatch();
   const handleViewDetails = () => {
     setShowDetails(true);
   };
@@ -491,7 +494,19 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"rejected"}}))
 updatetaskdispatch(setsuccessTask())
 updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
   }
+  const handleComment=(e)=>{
+    e.preventDefault()
+    console.log("Comment=",comment.current.value);
+    const data={
+  "taskId": task.task.TaskID,
+  "userId": localStorage.getItem("userId"),
+  "comment": comment.current.value
+}
+    addcommentdispatch(addComment(data));
+    comment.current.value="";
 
+  }
+console.log("TASKS",task.comments[0]?.comment)
   return (
     <div className="emp-task-list">
       <div className="emp-task-item">
@@ -518,7 +533,7 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
               </strong>
             </span>
           </div>
-          <span className="emp-task-status pending">{task.task.Status}</span>
+          <span className={`emp-task-status pending ${task.task.Status.toLowerCase()}`}>{task.task.Status}</span>
         </div>
       
         <div className="emp-task-actions emp-task-actions1">
@@ -540,21 +555,22 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
               </button>
             </>
           ) : (
+            task.task.Status!="completed"?
             <button
               className="emp-complete-btn"
               onClick={() => handleTaskCompletedUpdate(task.task.TaskID)}
             >
               Complete
-            </button>
+            </button>:<></>
           )}
   
 
           <button className="emp-details-btn" onClick={handleViewDetails}>View Details</button>
           </div>
-          <div className="commentSection">
-            <input type="search" placeholder="Comment" />
-            <button className="emp-accept-btn">Send</button>
-          </div>
+          <form onSubmit={(e)=>handleComment(e)} className="commentSection">
+            <input type="search" name="comment" ref={comment} placeholder="Comment" />
+            <button type="submit" disabled={addcommentloading} className="emp-accept-btn">Send</button>
+          </form>
         </div>
       </div>
 
@@ -699,14 +715,25 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
             </div>
 
             {/* Additional Details */}
-            {task.task.Comments && (
-              <div className="detail-section">
+            <div className="detail-section detail-section-comment">
                 <h4 className="section-title">Comments</h4>
-                <div className="detail-row">
-                  <p>{task.task.Comments}</p>
+            {task.comments && (
+              task.comments?.map((comment)=>{
+
+                return(
+                <div className=".detail-row detail-row-comment">
+                  <p>{comment.comment}</p>
+                  <div style={{borderLeft:"1px solid",paddingLeft:"10px"}}>
+                  <p>{comment.commentedBy}</p>
+                  <p style={{color:comment.userType=="admin"?"red":comment.userType=="manager"?"yellow":"green"}}>{comment.userType}</p>
+                  </div>
                 </div>
-              </div>
+                )
+
+              })
+              
             )}
+            </div>
           </div>
         </CModalBody>
         <CModalFooter>
