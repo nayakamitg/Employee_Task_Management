@@ -36,6 +36,20 @@ export const addEmployee = createAsyncThunk(
     }
   }
 );
+export const updateEmployee = createAsyncThunk(
+  "updateEmployee",
+  async ({id,data}, { rejectWithValue }) => {
+    try {
+      const res = await axios.put(`http://localhost:5231/api/Employee/${id}`, data);
+    
+      return res.data;
+    
+
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error adding employee");
+    }
+  }
+);
 
 // ------------------- Slice -------------------
 
@@ -47,7 +61,9 @@ const employeeSlice = createSlice({
     emperror: null,
     successaddemployee:false,
     adderror:null,
-    addloading:false
+    addloading:false,
+    updateloading:false,
+    updateerror:null
   },
   reducers: {
     setsuccessemployee:(state,action)=>{
@@ -85,6 +101,25 @@ const employeeSlice = createSlice({
       .addCase(addEmployee.rejected, (state, action) => {
         state.addloading = false;
         state.adderror = action.payload;
+      })
+      builder
+      .addCase(updateEmployee.pending, (state) => {
+        state.updateloading = true;
+        state.updateerror = null;
+      })
+      .addCase(updateEmployee.fulfilled, (state, action) => {
+        state.successaddemployee=true;
+        // state.employees=action.payload
+        var index=state.employees.findIndex((emp)=>emp.employee.UserID==action.payload.UserID);
+         if (index !== -1) {
+    state.employees[index].employee = action.payload;
+  }
+        state.updateloading = false;
+        state.updateerror = null;
+      })
+      .addCase(updateEmployee.rejected, (state, action) => {
+        state.updateloading = false;
+        state.updateerror = action.payload;
       });
   },
 });

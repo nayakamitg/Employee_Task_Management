@@ -24,7 +24,8 @@ import { toast } from "react-toastify";
 import {
   addEmployee,
   getEmployee,
-  setsuccessemployee
+  setsuccessemployee,
+  updateEmployee
 } from "../../services/ReduxController/employeeSlice";
 import { getDepartment } from "../../services/ReduxController/OtherSlices";
 import { InfinitySpin } from "react-loader-spinner";
@@ -32,10 +33,13 @@ import { InfinitySpin } from "react-loader-spinner";
 const EmployeeList = () => {
   const token = localStorage.getItem("token");
   const [visible, setVisible] = useState(false);
+  const [update, setUpdate] = useState(false);
+
   const empdispatch = useDispatch();
   const adddispatch = useDispatch();
+  const updatedispatch = useDispatch();
   const dispatch = useDispatch();
-  const { emploading, addloading, emperror, adderror, employees,successaddemployee } = useSelector(
+  const { emploading, addloading, emperror, adderror, employees,successaddemployee,updateloading } = useSelector(
     (state) => state.employeeDetails
   );
 
@@ -93,13 +97,11 @@ console.log(formData)
       JobTitle: "",
     });
   };
-
+const [uid ,setUid]=useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+if(!update){
     const data = {
-      email: formData.Email,
-      password: formData.Password,
       name: formData.Name,
       userType: formData.UserType,
       departmentId: formData.DepartmentId,
@@ -122,6 +124,25 @@ console.log(formData)
       Salary: "",
       JobTitle: "",
     });
+  }
+  else
+    {
+      updatedispatch(updateEmployee({id:uid,data:formData}))
+      setVisible(false)
+      setUpdate(false)
+      setFormData({
+      Email: "",
+      Password: "",
+      Name: "",
+      UserType: "",
+      Manager: "",
+      DepartmentId: "",
+      IsActive: true,
+      Salary: "",
+      JobTitle: "",
+    });
+
+  }
   };
   const handleFilterchange=(e)=>{
     const {name,value}=e.target;
@@ -184,6 +205,7 @@ console.log(employees)
               </label>
               <div className="search-filter">
                 <input
+                disabled={update}
                   type="email"
                   name="Email"
                   placeholder="Email"
@@ -200,6 +222,7 @@ console.log(employees)
               </label>
               <div className="search-filter">
                 <input
+                disabled={update}
                   type="password"
                   placeholder="Password"
                   name="Password"
@@ -333,9 +356,15 @@ console.log(employees)
 
               {/* Buttons */}
               <div className="search-filter">
+                {
+                  !update?
                 <button disabled={addloading} type="submit" className="edit-btn">
                   Submit
+                </button>:
+                <button disabled={updateloading} type="submit" className="edit-btn">
+                  Update
                 </button>
+}
                 <button
                   type="reset"
                   onClick={handleReset}
@@ -348,7 +377,11 @@ console.log(employees)
           </COffcanvasBody>
         </COffcanvas>
 
-        <button className="add-employee-btn" onClick={() => setVisible(true)}>
+        <button className="add-employee-btn" onClick={() => {
+          setVisible(true);
+          setUpdate(false)}
+          
+          }>
           Add New Employee
         </button>
       </div>
@@ -404,7 +437,7 @@ console.log(employees)
               return matchDepartment && matchSearch && matchUserType;
             })
             .map((employee) => (
-              <EmployeeCard key={employee.employee.UserID} employee={employee} />
+              <EmployeeCard key={employee.employee.UserID} setEditVisible={setVisible} setUid={setUid} setUpdate={setUpdate} setFormData={setFormData} employee={employee} />
             ))
         ) : (
           <h2>No employee available</h2>
@@ -423,9 +456,26 @@ console.log(employees)
 
 export default EmployeeList;
 
-const EmployeeCard = ({ employee }) => {
+const EmployeeCard = ({ employee,setEditVisible,setFormData,setUpdate,setUid }) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
+const handleEdit=()=>{
+  setEditVisible(true);
+  setUid(employee.employee.UserID)
+  setUpdate(true);
+  setFormData({
+      Email: employee.employee.Email,
+      Password: "",
+      Name: employee.employee.Name,
+      UserType: employee.employee.UserType,
+      Manager: employee.employee.Manager,
+      DepartmentId: employee.employee.DepartmentID,
+      IsActive: employee.employee.IsActive,
+      Salary: employee.employee.Salary,
+      JobTitle: employee.employee.JobTitle,
+    });
+}
+
 
   return (
     <>
@@ -458,7 +508,7 @@ const EmployeeCard = ({ employee }) => {
           </p>
         </div>
         <div className="card-actions">
-          <button onClick={()=>handleEdit} className="edit-btn">Edit</button>
+          <button onClick={handleEdit} className="edit-btn">Edit</button>
           <button className="view-btn" onClick={() => setVisible(true)}>
             View Details
           </button>
