@@ -18,6 +18,9 @@ import { Bounce, ToastContainer } from "react-toastify";
 import HeartLoading from "./components/common/HeartLoading";
 import EmpTaskList from "./components/employee/EmpTaskList";
 import Profile from './components/common/Profile';
+import ManagerDashboard from "./components/manager/ManagerDashboard";
+import ManagerTaskList from "./components/manager/ManagerTaskList";
+import ManagerEmployeeList from "./components/manager/ManagerEmployeeList";
 
 function App() {
   const loading = useSelector((state) => state.Loading);
@@ -40,7 +43,7 @@ function App() {
               element={
                 <Authorize setUserType={setUserType}>
                   {userType === "admin" || userType === "manager" ? (
-                    <AdminDashboard />
+                    <ManagerDashboard />
                   ) : (
                     <EmployeeDashboard />
                   )}
@@ -52,9 +55,12 @@ function App() {
               path="/tasks"
               element={
                 <Authorize setUserType={setUserType}>
-                  {userType === "admin" || userType === "manager" ? (
+                  {userType === "admin" ? (
                     <TaskList />
-                  ) : (
+                  ) :userType === "manager"? (
+                    <ManagerTaskList />
+                  )
+                  : (
                     <EmpTaskList />
                   )}
                 </Authorize>
@@ -65,7 +71,10 @@ function App() {
               path="/employees"
               element={
                 <Authorize setUserType={setUserType}>
-                  <EmployeeList />
+                  {userType=="admin"?
+                  <EmployeeList />:
+                  <ManagerEmployeeList/>
+              }
                 </Authorize>
               }
             />

@@ -46,7 +46,22 @@ setTimeout(()=>{
     color: isActive ? "#64FFDA" : "white"
   })}>Analytics</NavLink>
           </>
-        ) : (
+        ) :data==="manager"? (
+          <>
+            <NavLink to="/dashboard" style={({ isActive }) => ({
+    color: isActive ? "#64FFDA" : "white"
+  })}>Dashboard</NavLink>
+            <NavLink to="/tasks" style={({ isActive }) => ({
+    color: isActive ? "#64FFDA" : "white"
+  })}>My Tasks</NavLink>
+            <NavLink to="/employees" style={({ isActive }) => ({
+    color: isActive ? "#64FFDA" : "white"
+  })}>My Employees</NavLink>
+            <NavLink to="/analytics" style={({ isActive }) => ({
+    color: isActive ? "#64FFDA" : "white"
+  })}>My Analytics</NavLink>
+          </>
+        ): (
           <>
             <NavLink to="/dashboard" style={({ isActive }) => ({
     color: isActive ? "#64FFDA" : "white"

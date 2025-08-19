@@ -10,7 +10,7 @@ import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } 
 import { addComment, getAllTask, setsuccessTask, updateTask } from "../../services/ReduxController/taskSlice";
 
 
-const EmployeeDashboard=()=>{
+const ManagerDashboard=()=>{
 
   const dispatch=useDispatch();
   const taskdispatch=useDispatch();
@@ -89,7 +89,7 @@ if(!loading && employees){
 return <h1>No data found</h1>
 }
   
-  export default EmployeeDashboard;
+  export default ManagerDashboard;
 
 
 
