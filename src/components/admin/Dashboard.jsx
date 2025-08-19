@@ -5,7 +5,7 @@ import { getAdmin } from '../../services/ReduxController/adminSlice';
 import HeartLoading from '../common/HeartLoading';
 import { toast } from 'react-toastify';
 import { getStats } from '../../services/ReduxController/OtherSlices';
-
+import {WidgetStatsBExample,WidgetStatsAExample} from '../common/TaskSummary';
 
 const AdminDashboard = () => {
 const dispatch=useDispatch();
@@ -43,7 +43,7 @@ if(states.loading){
   return (
     <div className="dashboard1">
       <h1 className="dashboard-title1">Admin Dashboard</h1>
-      <div className="stats-container1">
+      {/* <div className="stats-container1">
         <div className="stat-card1">
           <h3>Total Employees</h3>
           <p className="stat-number1">{(states.data && states.data.states.totalEmployees)?states.data.states.totalEmployees:0}</p>
@@ -60,8 +60,12 @@ if(states.loading){
           <h3>Pending Tasks</h3>
           <p className="stat-number1">{(states.data && states.data.states.totalPendingTasks)?states.data.states.totalPendingTasks:0}</p>
         </div>
-      </div>
+      </div> */}
       
+      <WidgetStatsBExample states={states.data.states} />
+      <WidgetStatsAExample/>
+
+
       <div className="recent-activity1">
         <h2>Recent Activity</h2>
         <div className="activity-list1">

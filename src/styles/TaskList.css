@@ -405,9 +405,9 @@ option{
   min-width: 300px;
   flex:1;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: end;
-  margin-top: 15px;
+
 }
 .commentSection>input{
   height: 100%;
@@ -420,6 +420,7 @@ option{
 }
 .commentSection button{
   margin-left: 0.3em;
+  margin-top: 0.3em;
 }
 
 .emp-task-actions1{

@@ -122,6 +122,8 @@ const employeeSlice = createSlice({
         state.updateerror = action.payload;
       });
   },
+  
+  
 });
 
 export const {setsuccessemployee}=employeeSlice.actions;

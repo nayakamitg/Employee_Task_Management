@@ -25,6 +25,30 @@ export const getStats = createAsyncThunk(
   }
 );
 
+export const getStatsById = createAsyncThunk(
+  "gettingStatsById",
+  async ({token,id}, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5231/api/Employee/dashboard-summary-by-id/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "*/*",
+          },
+        }
+      );
+      if (response.status === 200) {
+        return response.data;
+      }
+      return "Error to get states";
+    } catch (error) {
+      return rejectWithValue(error.response.data || "Error to get states");
+    }
+  }
+);
+
 
 export const getDepartment = createAsyncThunk(
   "gettingDepartment",
@@ -81,6 +105,20 @@ const OtherSlices = createSlice({
         state.error = null;
       })
       .addCase(getDepartment.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      }),
+    builder
+      .addCase(getStatsById.fulfilled, (state, action) => {
+        state.data.states= action.payload;
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(getStatsById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getStatsById.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       });

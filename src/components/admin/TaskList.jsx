@@ -506,7 +506,7 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
     comment.current.value="";
 
   }
-console.log("TASKS",task.comments[0]?.comment)
+console.log("TASKS",task.assignedTo[0].name)
   return (
     <div className="emp-task-list">
       <div className="emp-task-item">
@@ -518,7 +518,9 @@ console.log("TASKS",task.comments[0]?.comment)
             {task.task.Priority}
           </span>
         </div>
-        <p className="emp-task-description">{task.task.Description}</p>
+        <p className="emp-task-description">By: {task.assignedBy[0].name}</p>
+        <p className="emp-task-description">To: {task.assignedTo[0].name}</p>
+      
         <div className="emp-task-meta">
           <div className="emp-task-dates">
             <span>

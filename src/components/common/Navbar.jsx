@@ -59,6 +59,12 @@ setTimeout(()=>{
   })}>My Analytics</NavLink>
           </>
         )}
+        <img
+          src="https://png.pngtree.com/png-vector/20250514/ourlarge/pngtree-3d-profile-icon-png-image_16279302.png"
+          alt="Profile"
+          className="nav-profile-img"
+          onClick={() => navigate('/profile')}
+        />
         <button onClick={handleLogOut} className="logout-btn">Logout</button>
       </div>
     </nav>
@@ -66,3 +72,4 @@ setTimeout(()=>{
 };
 
 export default Navbar;
+

@@ -4,7 +4,8 @@ import userSlice from "./userSlice";
 import loginSlice from "./loginSlice";
 import employeeSlice from "./employeeSlice";
 import taskSlice from './taskSlice';
-import adminSlice from '../ReduxController/adminSlice'
+import adminSlice from '../ReduxController/adminSlice';
+import profileSlice from './profileSlice';
 const Store=configureStore(
     {
         reducer:{
@@ -13,7 +14,8 @@ const Store=configureStore(
             login:loginSlice,
             employeeDetails:employeeSlice,
             task:taskSlice,
-            admin:adminSlice
+            admin:adminSlice,
+            profile:profileSlice
         }
     }
 )

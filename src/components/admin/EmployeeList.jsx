@@ -7,6 +7,7 @@ import HeartLoading from "../common/HeartLoading";
 import { CAlert } from "@coreui/react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@coreui/coreui/dist/css/coreui.min.css";
+
 import {
   CButton,
   CCloseButton,
@@ -475,13 +476,16 @@ const handleEdit=()=>{
       JobTitle: employee.employee.JobTitle,
     });
 }
+const images=["/profileImage.avif","/profileImage1.avif","/profileImage2.avif","/profileImage3.png","/profileImage4.jpg","/profileImage5.avif","/profileImage6.png","/profileImage7.avif"];
 
+// console.log(Math.floor(Math.random() * (3 - 0 + 1) + 0))
 
   return (
     <>
       <div className="employee-card">
         <div className="employee-header">
           <div className="employee-avatar">
+            <img src={images[Math.floor(Math.random() * ((images.length-1) - 0 + 1) + 0)]} alt="" />
           </div>
           <div className="employee-info">
             <h3>{employee.employee.Name}</h3>
