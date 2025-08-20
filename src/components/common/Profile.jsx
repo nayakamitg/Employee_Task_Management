@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import '../../styles/Profile.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import '/profileImage.avif';
+// import '/profileImage.avif';
 import { useSelector, useDispatch } from "react-redux";
 import { getProfile } from '../../services/ReduxController/profileSlice';
 import { toast } from 'react-toastify';
@@ -139,10 +139,12 @@ if(loading){
                 <strong>Role Type:</strong>
                 <span className="user-type-badge"> {user?.UserType.toUpperCase()}</span>
               </div>
+             {user?.Manager &&
               <div className="profile-info-item">
-                <strong>Reports To:</strong>
-                <span> {user?.Manager || 'N/A'}</span>
+                <strong>Manager:</strong>
+                <span> {user?.Manager}</span>
               </div>
+}
               {user?.Salary && (
                 <div className="profile-info-item">
                   <strong>Annual Salary:</strong>

@@ -79,6 +79,11 @@ function App() {
               }
             />
             <Route path="/profile" element={<Profile/>}></Route>
+            <Route path="/analytics" element={
+              <Authorize setUserType={setUserType}>
+              <Analytics/>
+              </Authorize>
+              }></Route>
             <Route path="*" element={<NotFound />} />
 
           </Routes>

@@ -41,7 +41,7 @@ const ManagerTaskList = () => {
   const UserId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const [visible, setVisible] = useState(false);
-
+console.log("Employees=",employees)
   const [formData, setFormData] = useState({
     Title: "",
     Description: "",
@@ -149,13 +149,18 @@ const ManagerTaskList = () => {
   }
 
   const options = [];
+  const ManagerEmployee = [];
 
-  employees?.forEach((emp) => {
+  employees?.filter((emp)=>emp.employee.Manager==localStorage.getItem("userId")).forEach((emp) => {
     options.push({
       value: emp.employee.UserID,
       label: emp.employee.Name, // Store plain text label for filtering
       userType: emp.employee.UserType, // Store UserType for custom styling
     });
+  });
+
+  employees?.filter((emp)=>emp.employee.Manager==localStorage.getItem("userId")).forEach((emp) => {
+    ManagerEmployee.push(emp.employee.UserID);
   });
 
   const customStyles = {
@@ -438,6 +443,8 @@ console.log(formData)
                   ? task.task.AssignedTo === UserId
                   : task.task.AssignedBy === UserId ||
                     task.task.AssignedTo === UserId) &&
+                    ManagerEmployee.includes(task.task.AssignedTo)||
+                    ManagerEmployee.includes(task.task.AssignedTo) &&
                 // Priority filter
                 (filter.priority === ""
                   ? task.task.Priority == "low" || "high" || "medium"
