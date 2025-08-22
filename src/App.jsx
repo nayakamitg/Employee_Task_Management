@@ -21,6 +21,8 @@ import Profile from './components/common/Profile';
 import ManagerDashboard from "./components/manager/ManagerDashboard";
 import ManagerTaskList from "./components/manager/ManagerTaskList";
 import ManagerEmployeeList from "./components/manager/ManagerEmployeeList";
+import EmployeeAnalytics from "./components/employee/EmployeeAnalytics";
+import ManagerAnalytics from "./components/manager/ManagerAnalytics";
 
 function App() {
   const loading = useSelector((state) => state.Loading);
@@ -81,7 +83,10 @@ function App() {
             <Route path="/profile" element={<Profile/>}></Route>
             <Route path="/analytics" element={
               <Authorize setUserType={setUserType}>
-              <Analytics/>
+                {
+                  userType==="admin"?<Analytics/>:userType==="manager"?<ManagerAnalytics/>:<EmployeeAnalytics/>
+                }
+              
               </Authorize>
               }></Route>
             <Route path="*" element={<NotFound />} />

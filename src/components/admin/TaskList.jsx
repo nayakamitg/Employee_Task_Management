@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getEmployee } from "../../services/ReduxController/employeeSlice";
 import { toast } from "react-toastify";
 import Select from "react-select";
+import { FaPen } from "react-icons/fa";
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import "@coreui/coreui/dist/css/coreui.min.css";
 import {
@@ -26,6 +27,7 @@ const TaskList = () => {
   const taskdispatch = useDispatch();
   const addtaskdispatch = useDispatch();
   const getempdispatch = useDispatch();
+  const updatetaskdispatch = useDispatch();
   const { tasks, taskerror, taskloading, addtaskloading, addtaskerror ,successAdded} =
     useSelector((state) => state.task);
   const { employees, emploading, emperror } = useSelector(
@@ -40,8 +42,10 @@ const TaskList = () => {
   const UserId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const [visible, setVisible] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const [formData, setFormData] = useState({
+    Id:0,
     Title: "",
     Description: "",
     AssignedTo: "",
@@ -59,9 +63,9 @@ const TaskList = () => {
       [name]: value,
     }));
   };
-  console.log("Filter=", filter);
+  // console.log("Filter=", filter);
 
-  console.log(tasks);
+  console.log("Tasks=",tasks);
 
   const handleReset = () => {
     setFormData({
@@ -89,7 +93,7 @@ const TaskList = () => {
     const data = {
       title: formData.Title,
       description: formData.Description,
-      assignedTo: formData.AssignedTo,
+      assignedTo: formData.AssignedTo?.value,
       assignedBy: localStorage.getItem("userId"),
       priority: formData.Priority,
       status: formData.Status,
@@ -113,6 +117,39 @@ const TaskList = () => {
     });
   };
 
+const handleEditTask=()=>{
+  const data = {
+      title: formData.Title,
+      description: formData.Description,
+      assignedTo: formData.AssignedTo?.value,
+      assignedBy: localStorage.getItem("userId"),
+      priority: formData.Priority,
+      status: formData.Status,
+      startDate: formData.StartDate,
+      deadline: formData.Deadline,
+      isActive: formData.IsActive,
+    };
+// formData
+console.log("Form Data",formData)
+
+    updatetaskdispatch(setsuccessTask())
+updatetaskdispatch(updateTask({id:formData.Id,data:data}))
+
+    setFormData({
+      Title: "",
+      Description: "",
+      AssignedTo: "",
+     Priority: "low",
+    Status: "pending",
+      Deadline: "",
+      StartDate: "",
+      IsActive: "",
+    });
+    setVisible(false)
+
+}
+
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -124,11 +161,11 @@ const TaskList = () => {
           ? value === "true"
           : value,
     }));
-    console.log(formData);
+    // console.log(formData);
   };
 
   const handleChangeSelect = (e) => {
-    console.log("Selected option:", e.value);
+    // console.log("Selected option:", e.value);
     setFormData({
       ...formData,
       AssignedTo: e.value,
@@ -143,9 +180,6 @@ const TaskList = () => {
     taskdispatch(getAllTask(token));
   }, [taskdispatch]);
 
-  if (employee) {
-    console.log(employee);
-  }
 
   const options = [];
 
@@ -191,7 +225,7 @@ const TaskList = () => {
     return option.label.toLowerCase().includes(inputValue.toLowerCase()); // Case-insensitive search by plain text
   };
 
-console.log(formData)
+// console.log(formData)
   useEffect(() => {
     getempdispatch(getEmployee());
   }, []);
@@ -271,7 +305,12 @@ console.log(formData)
                 styles={customStyles}
                 filterOption={customFilter}
                 components={customComponents}
-                onChange={handleChangeSelect}
+                value={formData.AssignedTo}
+                  onChange={(selectedOption) =>
+    setFormData({
+      ...formData,
+      AssignedTo: selectedOption, // update state with new option
+    })}
               />
             </div>
             <label htmlFor="Priority">
@@ -351,6 +390,15 @@ console.log(formData)
               </select>
             </div>
             <div className="search-filter">
+            { edit?
+             <button
+                type="submit"
+                disabled={addtaskloading}
+                className="edit-btn"
+                onClick={handleEditTask}
+              >
+                Edit
+              </button>:
               <button
                 type="submit"
                 disabled={addtaskloading}
@@ -358,6 +406,7 @@ console.log(formData)
               >
                 Submit
               </button>
+}
               <button
                 type="reset"
                 onClick={handleReset}
@@ -453,14 +502,14 @@ console.log(formData)
               &&
               (
                 filter.search===""?true:
-                task.task.Title.toLowerCase().includes(filter.search.toLowerCase())
+                ((task.task.Title.toLowerCase().includes(filter.search.toLowerCase()))||(task?.assignedTo[0]?.name?.toLowerCase().includes(filter.search.toLowerCase()))||(task?.assignedBy[0]?.name?.toLowerCase().includes(filter.search.toLowerCase())))
               )
               );
             })
             //'pending', 'in-progress', 'completed', 'on-hold','rejected'
 
             .map((task, index) => (
-              <TaskCard key={task.task.taskId || index} task={task} />
+              <TaskCard key={task.task.taskId || index} setEdit={setEdit} options={options}  setVisible={setVisible} setFormData={setFormData} task={task} />
             ))
         ) : (
           <p className="emp-no-tasks">No tasks assigned</p>
@@ -472,7 +521,8 @@ console.log(formData)
 
 export default TaskList;
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, setEdit,setVisible,setFormData,options}) => {
+  const userType=localStorage.getItem("userType");
   const comment=useRef("");
   const {addcommentloading,addcommenterror}=useSelector((state)=>state.task)
   const [showDetails, setShowDetails] = useState(false);
@@ -481,7 +531,24 @@ const addcommentdispatch=useDispatch();
   const handleViewDetails = () => {
     setShowDetails(true);
   };
-console.log(task)
+// console.log(task)
+
+const handleEdit=(e)=>{
+  setVisible(true);
+  setEdit(true);
+   setFormData({
+    Id:task.task.TaskID,
+      Title: task.task.Title,
+      Description: task.task.Description,
+      AssignedTo: options.find((opt) => opt.value ===  task.task.AssignedTo),
+     Priority: (task.task.Priority).toLowerCase(),
+    Status: task.task.Status,
+      Deadline: new Date(task.task.Deadline).toISOString().split("T")[0] ,
+      StartDate: new Date(task.task.StartDate).toISOString().split("T")[0] ,
+      IsActive: task.task.IsActive,
+    });
+}
+
   const handleTaskUpdate=(id)=>{
     updatetaskdispatch(setsuccessTask())
 updatetaskdispatch(updateTask({id:id,data:{Status:"in-progress"}}))
@@ -492,11 +559,11 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"rejected"}}))
   }
   const handleTaskCompletedUpdate=(id)=>{
 updatetaskdispatch(setsuccessTask())
-updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
+updatetaskdispatch(updateTask({id:id,data:{Status:"completed",completedDate:new Date()}}))
   }
   const handleComment=(e)=>{
     e.preventDefault()
-    console.log("Comment=",comment.current.value);
+    // console.log("Comment=",comment.current.value);
     const data={
   "taskId": task.task.TaskID,
   "userId": localStorage.getItem("userId"),
@@ -506,21 +573,36 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
     comment.current.value="";
 
   }
-console.log("TASKS",task.assignedTo[0].name)
+  useEffect(()=>{
+    if(addcommenterror){
+      toast.error(addcommenterror)
+    }
+  },[addcommenterror])
+// console.log("TASKS",task?.assignedTo[0].name)
   return (
     <div className="emp-task-list">
       <div className="emp-task-item">
+      <span className="TaskeditButtom" onClick={handleEdit} style={{visibility:userType=="admin"?"visible":"hidden"}}>
+        {<FaPen color="white"/>}
+      </span>
         <div className="emp-task-header">
           <h3>{task.task.Title}</h3>
-          <span
+         
+        </div>
+        
+        <div className="emp-task-meta">
+          <div className="emp-task-dates">
+            <p className="emp-task-description">By: {task.assignedBy[0].name}</p>
+        <p className="emp-task-description">To: {task.assignedTo[0].name}</p>
+        
+          </div>
+           <span
             className={`emp-task-priority ${task.task.Priority.toLowerCase()}`}
           >
             {task.task.Priority}
-          </span>
+            </span>
         </div>
-        <p className="emp-task-description">By: {task.assignedBy[0].name}</p>
-        <p className="emp-task-description">To: {task.assignedTo[0].name}</p>
-      
+
         <div className="emp-task-meta">
           <div className="emp-task-dates">
             <span>

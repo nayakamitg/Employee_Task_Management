@@ -434,3 +434,21 @@ option{
   max-height: 400px;
   overflow-x: auto;
 }
+
+.emp-task-item{
+  position: relative;
+}
+
+.TaskeditButtom{
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+}
+.TaskeditButtom:hover{
+  background-color: #1a1a1a;
+}

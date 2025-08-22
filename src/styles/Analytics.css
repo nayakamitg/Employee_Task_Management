@@ -2,11 +2,15 @@
   padding: 2rem;
   width: 100vw;
   margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 }
 
 .analytics-title {
   color: #fff;
   margin-bottom: 2rem;
+  font-size: 25px;
 }
 
 .metrics-grid {
@@ -26,22 +30,22 @@
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: transform 0.3s ease;
-  flex: 300px 1;
+  flex: 150px 1;
 }
 
 .metric-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
 .metric-card h3 {
   color: #fff;
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
 
 .metric-value {
   color: #64ffda;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
@@ -53,11 +57,17 @@
 }
 
 .analytics-details {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
+.performance-trends{
+  flex: 400px 6;
+}
+.department-stats {
+   flex: 400px 1;
+}
 .performance-trends,
 .department-stats {
   background: rgba(255, 255, 255, 0.1);
@@ -70,15 +80,28 @@
 .performance-trends h2,
 .department-stats h2 {
   color: #fff;
-  margin-bottom: 1.5rem;
+  font-size: 25px;
 }
 
 .trend-chart {
-  height: 300px;
   background: rgba(100, 255, 218, 0.1);
   border-radius: 8px;
+  top: 0;
+  left: 0;
+  width:95%;
 }
 
 .stats-table {
   color: #fff;
+}
+
+.selectandtitle{
+  display: flex;
+   justify-content: space-between;
+   flex-wrap: wrap;
+ /* flex-direction: column;
+  row-gap: 10px; */
+}
+.employee-filter{
+  max-width: 500px;
 }
