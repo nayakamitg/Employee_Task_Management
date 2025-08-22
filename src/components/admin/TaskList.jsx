@@ -484,8 +484,7 @@ updatetaskdispatch(updateTask({id:formData.Id,data:data}))
                   ? task.task.AssignedBy === UserId
                   : filter.task === "To_me"
                   ? task.task.AssignedTo === UserId
-                  : task.task.AssignedBy === UserId ||
-                    task.task.AssignedTo === UserId) &&
+                  : true) &&
                 // Priority filter
                 (filter.priority === ""
                   ? task.task.Priority == "low" || "high" || "medium"

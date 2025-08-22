@@ -22,11 +22,13 @@ import {
 } from "@coreui/react";
 import { addTask, getAllTask, updateTask,setsuccessTask, addComment } from "../../services/ReduxController/taskSlice";
 import { InfinitySpin } from "react-loader-spinner";
+import { FaPen } from "react-icons/fa";
 
 const ManagerTaskList = () => {
   const taskdispatch = useDispatch();
   const addtaskdispatch = useDispatch();
   const getempdispatch = useDispatch();
+  const updatetaskdispatch = useDispatch();
   const { tasks, taskerror, taskloading, addtaskloading, addtaskerror ,successAdded} =
     useSelector((state) => state.task);
   const { employees, emploading, emperror } = useSelector(
@@ -41,8 +43,10 @@ const ManagerTaskList = () => {
   const UserId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const [visible, setVisible] = useState(false);
+  const [edit, setEdit] = useState(false);
 console.log("Employees=",employees)
   const [formData, setFormData] = useState({
+    Id:0,
     Title: "",
     Description: "",
     AssignedTo: "",
@@ -62,7 +66,7 @@ console.log("Employees=",employees)
   };
   console.log("Filter=", filter);
 
-  console.log(tasks);
+  console.log("Task",tasks);
 
   const handleReset = () => {
     setFormData({
@@ -114,6 +118,42 @@ console.log("Employees=",employees)
     });
   };
 
+  
+  const handleEditTask=()=>{
+    const data = {
+        title: formData.Title,
+        description: formData.Description,
+        assignedTo: formData.AssignedTo?.value,
+        assignedBy: localStorage.getItem("userId"),
+        priority: formData.Priority,
+        status: formData.Status,
+        startDate: formData.StartDate,
+        deadline: formData.Deadline,
+        isActive: formData.IsActive,
+      };
+  // formData
+  console.log("Form Data",formData)
+  
+      updatetaskdispatch(setsuccessTask())
+  updatetaskdispatch(updateTask({id:formData.Id,data:data}))
+  
+      setFormData({
+        Title: "",
+        Description: "",
+        AssignedTo: "",
+       Priority: "low",
+      Status: "pending",
+        Deadline: "",
+        StartDate: "",
+        IsActive: "",
+      });
+      setVisible(false)
+      setEdit(false);
+  
+  }
+  
+
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -154,8 +194,8 @@ console.log("Employees=",employees)
   employees?.filter((emp)=>emp.employee.Manager==localStorage.getItem("userId")).forEach((emp) => {
     options.push({
       value: emp.employee.UserID,
-      label: emp.employee.Name, // Store plain text label for filtering
-      userType: emp.employee.UserType, // Store UserType for custom styling
+      label: emp.employee.Name,
+      userType: emp.employee.UserType,
     });
   });
 
@@ -196,6 +236,10 @@ console.log("Employees=",employees)
   const customFilter = (option, inputValue) => {
     return option.label.toLowerCase().includes(inputValue.toLowerCase()); // Case-insensitive search by plain text
   };
+console.log("Manager",ManagerEmployee)
+console.log("Task",tasks)
+  let NewTasks=tasks?.filter((task)=>ManagerEmployee?.includes(task?.assignedTo[0].userID))
+  console.log("NewTask=",NewTasks)
 
 console.log(formData)
   useEffect(() => {
@@ -224,7 +268,22 @@ console.log(formData)
         placement="end"
         dark
         visible={visible}
-        onHide={() => setVisible(false)}
+        onHide={() => {
+          setVisible(false);
+          setEdit(false);
+          setFormData({
+    Id:0,
+    Title: "",
+    Description: "",
+    AssignedTo: "",
+    Priority: "low",
+    Status: "pending",
+    Deadline: "",
+    StartDate: new Date().toISOString().split("T")[0],
+    IsActive: true,
+  })
+        
+        }}
       >
         <COffcanvasHeader>
           <COffcanvasTitle>Add New Employee</COffcanvasTitle>
@@ -277,7 +336,12 @@ console.log(formData)
                 styles={customStyles}
                 filterOption={customFilter}
                 components={customComponents}
-                onChange={handleChangeSelect}
+                 value={formData.AssignedTo}
+                 onChange={(selectedOption) =>
+    setFormData({
+      ...formData,
+      AssignedTo: selectedOption, 
+    })}
               />
             </div>
             <label htmlFor="Priority">
@@ -357,6 +421,15 @@ console.log(formData)
               </select>
             </div>
             <div className="search-filter">
+              { edit?
+             <button
+                type="submit"
+                disabled={addtaskloading}
+                className="edit-btn"
+                onClick={handleEditTask}
+              >
+                Edit
+              </button>:
               <button
                 type="submit"
                 disabled={addtaskloading}
@@ -364,6 +437,7 @@ console.log(formData)
               >
                 Submit
               </button>
+          }
               <button
                 type="reset"
                 onClick={handleReset}
@@ -432,8 +506,8 @@ console.log(formData)
       </div>
 
       <div className="tasks-container">
-        {tasks && tasks.length > 0 ? (
-          tasks
+          {NewTasks && NewTasks.length > 0 ? (
+          NewTasks
             .filter((task) => {
               return (
                 // User task filter logic (By_me, To_me, or both)
@@ -441,10 +515,7 @@ console.log(formData)
                   ? task.task.AssignedBy === UserId
                   : filter.task === "To_me"
                   ? task.task.AssignedTo === UserId
-                  : task.task.AssignedBy === UserId ||
-                    task.task.AssignedTo === UserId) &&
-                    ManagerEmployee.includes(task.task.AssignedTo)||
-                    ManagerEmployee.includes(task.task.AssignedTo) &&
+                  : true) &&
                 // Priority filter
                 (filter.priority === ""
                   ? task.task.Priority == "low" || "high" || "medium"
@@ -461,14 +532,14 @@ console.log(formData)
               &&
               (
                 filter.search===""?true:
-                task.task.Title.toLowerCase().includes(filter.search.toLowerCase())
+                ((task.task.Title.toLowerCase().includes(filter.search.toLowerCase()))||(task?.assignedTo[0]?.name?.toLowerCase().includes(filter.search.toLowerCase()))||(task?.assignedBy[0]?.name?.toLowerCase().includes(filter.search.toLowerCase())))
               )
               );
             })
             //'pending', 'in-progress', 'completed', 'on-hold','rejected'
 
             .map((task, index) => (
-              <TaskCard key={task.task.taskId || index} task={task} />
+              <TaskCard key={task.task.taskId || index} task={task} setEdit={setEdit} options={options} managerEmployee={ManagerEmployee}  setVisible={setVisible} setFormData={setFormData}/>
             ))
         ) : (
           <p className="emp-no-tasks">No tasks assigned</p>
@@ -480,7 +551,9 @@ console.log(formData)
 
 export default ManagerTaskList;
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task,setEdit,setVisible,setFormData,options,managerEmployee }) => {
+  const userType=localStorage.getItem("userType");
+  const userId=localStorage.getItem("userId");
   const comment=useRef("");
   const {addcommentloading,addcommenterror}=useSelector((state)=>state.task)
   const [showDetails, setShowDetails] = useState(false);
@@ -514,37 +587,69 @@ updatetaskdispatch(updateTask({id:id,data:{Status:"completed"}}))
     comment.current.value="";
 
   }
-console.log("TASKS",task.assignedTo[0].name)
+  
+const handleEdit=(e)=>{
+  setVisible(true);
+  setEdit(true);
+   setFormData({
+    Id:task.task.TaskID,
+      Title: task.task.Title,
+      Description: task.task.Description,
+      AssignedTo: options.find((opt) => opt.value ===  task.task.AssignedTo),
+     Priority: (task.task.Priority).toLowerCase(),
+    Status: task.task.Status,
+      Deadline: new Date(task.task.Deadline).toISOString().split("T")[0] ,
+      StartDate: new Date(task.task.StartDate).toISOString().split("T")[0] ,
+      IsActive: task.task.IsActive,
+    });
+}
+console.log("TASKS",task.assignedTo[0])
+
+
+
   return (
-    <div className="emp-task-list">
-      <div className="emp-task-item">
-        <div className="emp-task-header">
-          <h3>{task.task.Title}</h3>
-          <span
-            className={`emp-task-priority ${task.task.Priority.toLowerCase()}`}
-          >
-            {task.task.Priority}
+     <div className="emp-task-list">
+          <div className="emp-task-item">
+          <span className="TaskeditButtom" onClick={handleEdit} style={
+            {visibility:managerEmployee?.includes(task?.assignedBy[0]?.userID)?"visible":"hidden"}
+            }>
+            {<FaPen color="white"/>}
           </span>
-        </div>
-        <p className="emp-task-description">By: {task.assignedBy[0].name}</p>
-        <p className="emp-task-description">To: {task.assignedTo[0].name}</p>
-      
-        <div className="emp-task-meta">
-          <div className="emp-task-dates">
-            <span>
-              <strong>
-                Start: {new Date(task.task.StartDate).toLocaleDateString()}
-              </strong>
-            </span>
-            <br />
-            <span>
-              <strong>
-                Due: {new Date(task.task.Deadline).toLocaleDateString()}
-              </strong>
-            </span>
-          </div>
-          <span className={`emp-task-status pending ${task.task.Status.toLowerCase()}`}>{task.task.Status}</span>
-        </div>
+            <div className="emp-task-header">
+              <h3>{task.task.Title}</h3>
+             
+            </div>
+            
+            <div className="emp-task-meta">
+              <div className="emp-task-dates">
+                <p className="emp-task-description">By: {task.assignedBy[0].name}</p>
+            <p className="emp-task-description">To: {task.assignedTo[0].name}</p>
+            
+              </div>
+               <span
+                className={`emp-task-priority ${task.task.Priority.toLowerCase()}`}
+              >
+                {task.task.Priority}
+                </span>
+            </div>
+    
+            <div className="emp-task-meta">
+              <div className="emp-task-dates">
+                <span>
+                  <strong>
+                    Start: {new Date(task.task.StartDate).toLocaleDateString()}
+                  </strong>
+                </span>
+                <br />
+                <span>
+                  <strong>
+                    Due: {new Date(task.task.Deadline).toLocaleDateString()}
+                  </strong>
+                </span>
+              </div>
+              <span className={`emp-task-status pending ${task.task.Status.toLowerCase()}`}>{task.task.Status}</span>
+            </div>
+          
       
         <div className="emp-task-actions emp-task-actions1">
           <div className="emp-task-actions">

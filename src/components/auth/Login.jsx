@@ -150,10 +150,6 @@ const Login = () => {
               Sign In
             </button>
 
-            <div className="register-link">
-              Don't have an account?{" "}
-              <NavLink to="/register">Create one</NavLink>
-            </div>
           </form>
         </div>
       )}
