@@ -150,6 +150,8 @@ return <h1>No data found</h1>
 
   
   const TaskCard = ({ task }) => {
+    const userId = localStorage.getItem("userId");
+    const managerId = localStorage.getItem("userId");
     const comment=useRef("");
     const {addcommentloading,addcommenterror}=useSelector((state)=>state.task)
     const [showDetails, setShowDetails] = useState(false);
@@ -158,6 +160,7 @@ return <h1>No data found</h1>
     const handleViewDetails = () => {
       setShowDetails(true);
     };
+    const states=useSelector((state)=>state.other.data.states)||{};
   console.log(task)
     const handleTaskUpdate=(id)=>{
       updatetaskdispatch(setsuccessTask())
@@ -183,6 +186,32 @@ return <h1>No data found</h1>
       comment.current.value="";
   
     }
+
+  const filterTasks = (status, active = false) =>
+    managedEmployees.flatMap(
+      (emp) =>
+        states.tasks?.filter(
+          (task) =>
+            (active ? task.IsActive === true : status ? task.Status === status : true) &&
+            (task.AssignedBy === emp.userId || task.AssignedTo === emp.userId)
+        ) || []
+    );
+  const managedEmployees =
+    userId === managerId
+      ? states.employees?.filter((emp) => emp.manager === managerId) || []
+      : states.employees?.filter((emp) => emp.userId === userId) || [];
+
+
+      const ActiveTask = filterTasks(null, true);
+  const PendingTask = filterTasks("pending");
+  const CompletedTask = filterTasks("completed");
+  const InProgressTask = filterTasks("in-progress");
+
+console.log("ActiveTask",ActiveTask)
+console.log("Pending",PendingTask)
+console.log("Complete",CompletedTask)
+console.log("InProgress",InProgressTask)
+
   // console.log("TASKS",task.assignedTo[0].name)
     return (
       <div className="emp-task-list">

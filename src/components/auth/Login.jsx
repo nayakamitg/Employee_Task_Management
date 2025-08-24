@@ -72,9 +72,11 @@ const Login = () => {
   // Handle login success
   useEffect(() => {
     if (islogin && data?.token) {
+      console.log("Data:",data)
       localStorage.setItem("token", data.token);
       localStorage.setItem("userType", data.userType);
       localStorage.setItem("userId", data.userId);
+      localStorage.setItem("profileImage", data.profileImage);
       toast.success("Successfully Logged In");
       navigate("/dashboard", { replace: true });
     }

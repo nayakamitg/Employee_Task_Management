@@ -44,7 +44,7 @@ function App() {
               path="/dashboard"
               element={
                 <Authorize setUserType={setUserType}>
-                  {userType === "admin" || userType === "manager" ? (
+                  {userType === "admin"?<AdminDashboard/>: userType === "manager" ? (
                     <ManagerDashboard />
                   ) : (
                     <EmployeeDashboard />

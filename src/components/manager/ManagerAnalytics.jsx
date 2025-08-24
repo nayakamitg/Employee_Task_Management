@@ -57,35 +57,9 @@ export const ManagerAnalyticsDetails = ({ userId, managerId }) => {
 
   const states = data?.states || {};
 
-  // If "All" is selected, use all employees under manager
-  // Else, only that single employee
-  const managedEmployees =
-    userId === managerId
-      ? states.employees?.filter((emp) => emp.manager === managerId) || []
-      : states.employees?.filter((emp) => emp.userId === userId) || [];
+  const managedEmployees = states?.employees?.filter((emp) => emp.manager === managerId) || []
 
-  // Dataset for pie chart
-  const dataset = managedEmployees.map((emp, index) => {
-    const taskCount =
-      states.tasks?.filter(
-        (task) => task.AssignedBy === emp.userId || task.AssignedTo === emp.userId
-      ).length || 0;
-    return { id: index, value: taskCount, label: emp.name };
-  });
-
-  const TotalTaskCount = dataset.reduce((sum, d) => sum + d.value, 0);
-
-  // Utility: filter tasks by status
-  const filterTasks = (status, active = false) =>
-    managedEmployees.flatMap(
-      (emp) =>
-        states.tasks?.filter(
-          (task) =>
-            (active ? task.IsActive === true : status ? task.Status === status : true) &&
-            (task.AssignedBy === emp.userId || task.AssignedTo === emp.userId)
-        ) || []
-    );
-
+ 
   const ActiveTask = filterTasks(null, true);
   const PendingTask = filterTasks("pending");
   const CompletedTask = filterTasks("completed");

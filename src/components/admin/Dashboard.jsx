@@ -18,11 +18,9 @@ const states=useSelector((state)=>state.other)
   },[dispatch])
 
 
-  useEffect(()=>{
-    console.log("Admin",data)
-    console.log("States",states.data)
-  },[data,states.data])
 
+ console.log("Admin",data)
+ console.log("States",states.data)
 
 useEffect(()=>{
   if(error){
@@ -43,6 +41,7 @@ if(states.loading){
   return (
     <div className="dashboard1">
       <h1 className="dashboard-title1">Admin Dashboard</h1>
+      
       {/* <div className="stats-container1">
         <div className="stat-card1">
           <h3>Total Employees</h3>

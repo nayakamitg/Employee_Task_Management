@@ -75,7 +75,7 @@ setTimeout(()=>{
           </>
         )}
         <img
-          src="https://png.pngtree.com/png-vector/20250514/ourlarge/pngtree-3d-profile-icon-png-image_16279302.png"
+          src={`http://localhost:5231/${localStorage.getItem("profileImage")}`}
           alt="Profile"
           className="nav-profile-img"
           onClick={() => navigate('/profile')}
